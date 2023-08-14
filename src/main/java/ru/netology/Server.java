@@ -3,9 +3,6 @@ package ru.netology;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +64,8 @@ public class Server {
 
             Map<String, String> headers = new HashMap<>();
 
+            String url = parts[1];
+
             while (true) {
                 String readedLine = in.readLine();
 
@@ -80,9 +79,9 @@ public class Server {
 
             String body = in.lines().collect(Collectors.joining());
 
-            Request request = new Request(method, headers, body);
+            Request request = new Request(method, headers, body, url);
 
-            final var path = parts[1];
+            final var path = request.getPath();
 
             if (!validPaths.contains(path)) {
                sendNotFound(out);
