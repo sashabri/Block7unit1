@@ -4,6 +4,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,8 @@ public class Request {
     private String body;
     private String url;
     private List<NameValuePair> queryParams;
+    private List<NameValuePair> bodyParams;
+
     private String path;
 
     public Request(HttpMethod method, Map<String, String> headers, String body, String url) {
@@ -21,6 +24,7 @@ public class Request {
         this.body = body;
         this.url = url;
         parseUrl();
+        parseBody();
     }
 
     public HttpMethod getMethod() {
@@ -65,4 +69,21 @@ public class Request {
        queryParams = URLEncodedUtils.parse(query, StandardCharsets.UTF_8);
     }
 
+    public List<NameValuePair> getPostParams() {
+        return bodyParams;
+    }
+
+    public List<String> getPostParam(String name) {
+        List<String> list = new ArrayList<>();
+        for (NameValuePair nameValuePair : bodyParams) {
+            if(nameValuePair.getName().equals(name)) {
+               list.add(nameValuePair.getValue());
+            }
+        }
+       return list;
+    }
+
+    private void parseBody() {
+        bodyParams = URLEncodedUtils.parse(body, StandardCharsets.UTF_8);
+    }
 }
